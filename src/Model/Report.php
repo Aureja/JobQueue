@@ -45,6 +45,14 @@ class Report implements ReportInterface
     protected $successful;
 
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->successful = false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function setEndedAt(\DateTime $endedAt)

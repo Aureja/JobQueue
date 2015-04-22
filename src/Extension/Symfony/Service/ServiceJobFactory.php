@@ -45,8 +45,8 @@ class ServiceJobFactory implements JobFactoryInterface
     {
         return new ServiceJob(
             $this->container,
-            $configuration->getParameter('service_id'),
-            $configuration->getParameter('service_method')
+            $configuration->getParameter('symfony_service_id'),
+            $configuration->getParameter('symfony_service_method')
         );
     }
 }
