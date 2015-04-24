@@ -11,7 +11,7 @@
 
 namespace Aureja\JobQueue;
 
-use Aureja\JobQueue\Model\ReportInterface;
+use Aureja\JobQueue\Model\JobReportInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -31,9 +31,9 @@ interface JobInterface
     /**
      * Run job.
      *
-     * @param ReportInterface $report
+     * @param JobReportInterface $report
      *
      * @return string Return job status.
      */
-    public function run(ReportInterface $report);
+    public function run(JobReportInterface $report);
 }

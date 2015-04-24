@@ -16,15 +16,31 @@ namespace Aureja\JobQueue\Model;
  *
  * @since 4/16/15 11:38 PM
  */
-interface ReportInterface
+interface JobReportInterface
 {
+
+    /**
+     * Set job configuration.
+     *
+     * @param JobConfigurationInterface $configuration
+     *
+     * @return JobReportInterface
+     */
+    public function setConfiguration(JobConfigurationInterface $configuration);
+
+    /**
+     * Get job configuration.
+     *
+     * @return JobConfigurationInterface
+     */
+    public function getConfiguration();
 
     /**
      * Set ended at.
      *
      * @param \DateTime $endedAt
      *
-     * @return ReportInterface
+     * @return JobReportInterface
      */
     public function setEndedAt(\DateTime $endedAt);
 
@@ -40,7 +56,7 @@ interface ReportInterface
      *
      * @param string $errorOutput
      *
-     * @return ReportInterface
+     * @return JobReportInterface
      */
     public function setErrorOutput($errorOutput);
 
@@ -56,7 +72,7 @@ interface ReportInterface
      *
      * @param string $output
      *
-     * @return ReportInterface
+     * @return JobReportInterface
      */
     public function setOutput($output);
 
@@ -72,7 +88,7 @@ interface ReportInterface
      *
      * @param \DateTime $startedAt
      *
-     * @return ReportInterface
+     * @return JobReportInterface
      */
     public function setStartedAt(\DateTime $startedAt);
 
@@ -88,7 +104,7 @@ interface ReportInterface
      *
      * @param string $successful
      *
-     * @return ReportInterface
+     * @return JobReportInterface
      */
     public function setSuccessful($successful);
 

@@ -63,7 +63,7 @@ class JobConfiguration implements JobConfigurationInterface
     protected $queue;
 
     /**
-     * @var array|ReportInterface[]
+     * @var array|JobReportInterface[]
      */
     protected $reports;
 
@@ -257,7 +257,7 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function addReport(ReportInterface $report)
+    public function addReport(JobReportInterface $report)
     {
         $this->reports[] = $report;
     }

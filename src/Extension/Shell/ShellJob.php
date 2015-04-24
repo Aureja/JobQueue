@@ -13,7 +13,7 @@ namespace Aureja\JobQueue\Extension\Shell;
 
 use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
-use Aureja\JobQueue\Model\ReportInterface;
+use Aureja\JobQueue\Model\JobReportInterface;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
@@ -52,7 +52,7 @@ class ShellJob implements JobInterface
     /**
      * {@inheritdoc}
      */
-    public function run(ReportInterface $report)
+    public function run(JobReportInterface $report)
     {
         try {
             $this->process->run();

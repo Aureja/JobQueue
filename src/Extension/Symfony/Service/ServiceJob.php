@@ -14,7 +14,7 @@ namespace Aureja\JobQueue\Extension\Symfony\Service;
 use Aureja\JobQueue\Extension\Symfony\Exception\NotFoundServiceJobException;
 use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
-use Aureja\JobQueue\Model\ReportInterface;
+use Aureja\JobQueue\Model\JobReportInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -65,7 +65,7 @@ class ServiceJob implements JobInterface
     /**
      * {@inheritdoc}
      */
-    public function run(ReportInterface $report)
+    public function run(JobReportInterface $report)
     {
         if (false === $this->container->has($this->id)) {
             throw new NotFoundServiceJobException(sprintf('Not found %s service', $this->id));

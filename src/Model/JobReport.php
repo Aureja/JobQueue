@@ -16,8 +16,13 @@ namespace Aureja\JobQueue\Model;
  *
  * @since 4/21/15 10:46 PM
  */
-class Report implements ReportInterface
+class JobReport implements JobReportInterface
 {
+
+    /**
+     * @var JobConfigurationInterface
+     */
+    protected $configuration;
 
     /**
      * @var \DateTime
@@ -51,6 +56,26 @@ class Report implements ReportInterface
     {
         $this->successful = false;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setConfiguration(JobConfigurationInterface $configuration)
+    {
+        $this->configuration = $configuration;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
+    }
+
+
 
     /**
      * {@inheritdoc}
