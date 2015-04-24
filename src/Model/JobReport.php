@@ -75,8 +75,6 @@ class JobReport implements JobReportInterface
         return $this->configuration;
     }
 
-
-
     /**
      * {@inheritdoc}
      */
