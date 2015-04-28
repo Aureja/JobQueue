@@ -63,4 +63,14 @@ class JobFactoryRegistry
 
         throw new JobFactoryException(sprintf('Not found %s job factory', $name));
     }
+
+    /**
+     * Get factories.
+     *
+     * @return array|JobFactoryInterface[]
+     */
+    public function getFactories()
+    {
+        return $this->factories;
+    }
 }

@@ -19,4 +19,11 @@ namespace Aureja\JobQueue\Provider;
 interface JobProviderInterface
 {
     public function getNextJob($queue);
+
+    /**
+     * Get job factory names.
+     *
+     * @return array
+     */
+    public function getFactoryNames();
 }

@@ -34,6 +34,22 @@ interface JobConfigurationInterface
     public function getCreatedAt();
 
     /**
+     * Set disabled.
+     *
+     * @param bool $disabled
+     *
+     * @return JobConfigurationInterface
+     */
+    public function setDisabled($disabled);
+
+    /**
+     * Checks or is disabled.
+     *
+     * @return bool
+     */
+    public function isDisabled();
+
+    /**
      * Set factory.
      *
      * @param string $factory
@@ -48,6 +64,22 @@ interface JobConfigurationInterface
      * @return string
      */
     public function getFactory();
+
+    /**
+     * Set name.
+     *
+     * @param string $name
+     *
+     * @return JobConfigurationInterface
+     */
+    public function setName($name);
+
+    /**
+     * Get name.
+     *
+     * @return string
+     */
+    public function getName();
 
     /**
      * Set next start.

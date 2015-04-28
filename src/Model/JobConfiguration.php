@@ -33,9 +33,19 @@ class JobConfiguration implements JobConfigurationInterface
     protected $createdAt;
 
     /**
+     * @var bool
+     */
+    protected $disabled;
+
+    /**
      * @var string
      */
     protected $factory;
+
+    /**
+     * @var string
+     */
+    protected $name;
 
     /**
      * @var null|\DateTime
@@ -79,6 +89,7 @@ class JobConfiguration implements JobConfigurationInterface
     {
         $this->createdAt = new \DateTime();
         $this->parameters = [];
+        $this->priority = 0;
         $this->state = JobState::STATE_NEW;
     }
 
@@ -101,6 +112,24 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
+    public function setDisabled($disabled)
+    {
+        $this->disabled = $disabled;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isDisabled()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function setFactory($factory)
     {
         $this->factory = $factory;
@@ -114,6 +143,24 @@ class JobConfiguration implements JobConfigurationInterface
     public function getFactory()
     {
         return $this->factory;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

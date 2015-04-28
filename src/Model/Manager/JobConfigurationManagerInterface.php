@@ -30,6 +30,14 @@ interface JobConfigurationManagerInterface
      */
     public function find($id);
 
+
+    /**
+     * Find all job configurations.
+     *
+     * @return array|JobConfigurationInterface[]
+     */
+    public function findAll();
+
     /**
      * Create new job configuration object.
      *
