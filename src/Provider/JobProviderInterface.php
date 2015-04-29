@@ -11,6 +11,9 @@
 
 namespace Aureja\JobQueue\Provider;
 
+use Aureja\JobQueue\JobFactoryInterface;
+use Aureja\JobQueue\Model\JobConfigurationInterface;
+
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
@@ -18,7 +21,15 @@ namespace Aureja\JobQueue\Provider;
  */
 interface JobProviderInterface
 {
-    public function getNextJob($queue);
+
+    /**
+     * Get job factory.
+     *
+     * @param JobConfigurationInterface $configuration
+     *
+     * @return JobFactoryInterface
+     */
+    public function getFactory(JobConfigurationInterface $configuration);
 
     /**
      * Get job factory names.
@@ -26,4 +37,13 @@ interface JobProviderInterface
      * @return array
      */
     public function getFactoryNames();
+
+    /**
+     * Get next job configuration.
+     *
+     * @param string $queue
+     *
+     * @return null|JobConfigurationInterface
+     */
+    public function getNextConfiguration($queue);
 }

@@ -54,6 +54,7 @@ class JobReport implements JobReportInterface
      */
     public function __construct()
     {
+        $this->startedAt = new \DateTime();
         $this->successful = false;
     }
 

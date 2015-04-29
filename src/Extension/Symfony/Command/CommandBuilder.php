@@ -61,7 +61,7 @@ class CommandBuilder
     public function build($command)
     {
         return sprintf(
-            '%s %s/%s %s --env=%s',
+            '%s %s/%s %s --env=%s --no-debug',
             $this->phpExecutable,
             rtrim($this->consoleDir, '/'),
             'console',

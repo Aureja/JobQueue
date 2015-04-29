@@ -27,7 +27,7 @@ class CommandBuilderTest extends TestCase
         $builder = new CommandBuilder('aureja/fake-dir', 'dev');
 
         $this->assertEquals(
-            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=dev',
+            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=dev --no-debug',
             $builder->build('aureja:command')
         );
     }
@@ -37,7 +37,7 @@ class CommandBuilderTest extends TestCase
         $builder = new CommandBuilder('aureja/fake-dir/', 'prod');
 
         $this->assertEquals(
-            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=prod',
+            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=prod --no-debug',
             $builder->build('aureja:command')
         );
     }

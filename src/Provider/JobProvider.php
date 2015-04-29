@@ -11,6 +11,7 @@
 
 namespace Aureja\JobQueue\Provider;
 
+use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\Manager\JobConfigurationManagerInterface;
 use Aureja\JobQueue\Register\JobFactoryRegistry;
 
@@ -49,9 +50,9 @@ class JobProvider implements JobProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getNextJob($queue)
+    public function getFactory(JobConfigurationInterface $configuration)
     {
-        // TODO: Implement getNextJob() method.
+        return $this->factoryRegistry->getFactory($configuration->getFactory());
     }
 
     /**
@@ -60,5 +61,13 @@ class JobProvider implements JobProviderInterface
     public function getFactoryNames()
     {
         return array_keys($this->factoryRegistry->getFactories());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNextConfiguration($queue)
+    {
+        return $this->configurationManager->findNext($queue);
     }
 }

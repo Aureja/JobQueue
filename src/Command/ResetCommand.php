@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Aureja package.
+ * This file is part of the Tadcka package.
  *
  * (c) Tadas Gliaubicas <tadcka89@gmail.com>
  *
@@ -11,7 +11,6 @@
 
 namespace Aureja\JobQueue\Command;
 
-use Aureja\JobQueue\JobQueue;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,27 +19,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
- * @since 4/20/15 10:26 PM
+ * @since 4/29/15 10:22 PM
  */
-class RunCommand extends Command
+class ResetCommand extends Command
 {
-
-    /**
-     * @var JobQueue
-     */
-    private $jobQueue;
-
-    /**
-     * Constructor.
-     *
-     * @param JobQueue $jobQueue
-     */
-    public function __construct(JobQueue $jobQueue)
-    {
-        $this->jobQueue = $jobQueue;
-
-        parent::__construct();
-    }
 
     /**
      * {@inheritdoc}
@@ -48,9 +30,9 @@ class RunCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('aureja:job-queue:run')
-            ->setDescription('Runs jobs from the queue.')
-            ->addArgument('queue', InputArgument::OPTIONAL, 'Run job from current queue.')
+            ->setName('aureja:job-queue:reset')
+            ->setDescription('Reset jobs from the queue.')
+            ->addArgument('queue', InputArgument::OPTIONAL, 'Reset job from current queue.')
         ;
     }
     /**
@@ -58,6 +40,6 @@ class RunCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->jobQueue->run($input->getArgument('queue'));
+        $queue = $input->getArgument('queue');
     }
 }

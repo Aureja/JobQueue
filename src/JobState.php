@@ -24,11 +24,6 @@ class JobState
     const STATE_NEW = 'new';
 
     /**
-     * State if job is inserted, and might be started.
-     */
-    const STATE_PENDING = 'pending';
-
-    /**
      * State if job was never started, and will never be started.
      */
     const STATE_CANCELED = 'canceled';

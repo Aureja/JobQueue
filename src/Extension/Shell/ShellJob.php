@@ -39,6 +39,7 @@ class ShellJob implements JobInterface
     public function __construct($command)
     {
         $this->process = new Process($command);
+        $this->process->setTimeout(null);
     }
 
     /**

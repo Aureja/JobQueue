@@ -39,6 +39,7 @@ class PhpJob implements JobInterface
     public function __construct($script)
     {
         $this->process = new PhpProcess($script);
+        $this->process->setTimeout(null);
     }
 
     /**

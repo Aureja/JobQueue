@@ -39,6 +39,15 @@ interface JobConfigurationManagerInterface
     public function findAll();
 
     /**
+     * Find next job configuration.
+     *
+     * @param string $queue
+     *
+     * @return null|JobConfigurationInterface
+     */
+    public function findNext($queue);
+
+    /**
      * Create new job configuration object.
      *
      * @return JobConfigurationInterface
