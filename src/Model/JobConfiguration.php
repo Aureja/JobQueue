@@ -35,7 +35,7 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * @var bool
      */
-    protected $disabled;
+    protected $enabled;
 
     /**
      * @var string
@@ -112,9 +112,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setDisabled($disabled)
+    public function setEnabled($enabled)
     {
-        $this->disabled = $disabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
@@ -122,9 +122,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function isDisabled()
+    public function isEnabled()
     {
-        return $this->disabled;
+        return $this->enabled;
     }
 
     /**

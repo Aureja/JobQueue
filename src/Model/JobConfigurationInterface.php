@@ -34,20 +34,20 @@ interface JobConfigurationInterface
     public function getCreatedAt();
 
     /**
-     * Set disabled.
+     * Set enabled.
      *
-     * @param bool $disabled
+     * @param bool $enabled
      *
      * @return JobConfigurationInterface
      */
-    public function setDisabled($disabled);
+    public function setEnabled($enabled);
 
     /**
-     * Checks or is disabled.
+     * Checks or is enabled.
      *
      * @return bool
      */
-    public function isDisabled();
+    public function isEnabled();
 
     /**
      * Set factory.

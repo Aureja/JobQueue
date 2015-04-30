@@ -13,6 +13,7 @@ namespace Aureja\JobQueue\Extension\Shell;
 
 use Aureja\JobQueue\JobFactoryInterface;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -23,10 +24,25 @@ class ShellJobFactory implements JobFactoryInterface
 {
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
+     * Constructor.
+     *
+     * @param JobReportManagerInterface $reportManager
+     */
+    public function __construct(JobReportManagerInterface $reportManager)
+    {
+        $this->reportManager = $reportManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function create(JobConfigurationInterface $configuration)
     {
-        return new ShellJob($configuration->getParameter('shell_command'));
+        return new ShellJob($configuration->getParameter('shell_command'), $this->reportManager);
     }
 }

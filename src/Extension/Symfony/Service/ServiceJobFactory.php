@@ -13,6 +13,7 @@ namespace Aureja\JobQueue\Extension\Symfony\Service;
 
 use Aureja\JobQueue\JobFactoryInterface;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,13 +30,20 @@ class ServiceJobFactory implements JobFactoryInterface
     private $container;
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
      * Constructor.
      *
      * @param ContainerInterface $container
+     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, JobReportManagerInterface $reportManager)
     {
         $this->container = $container;
+        $this->reportManager = $reportManager;
     }
 
     /**

@@ -84,6 +84,22 @@ interface JobReportInterface
     public function getOutput();
 
     /**
+     * Set job pid.
+     *
+     * @param int $pid
+     *
+     * @return JobReportInterface
+     */
+    public function setPid($pid);
+
+    /**
+     * Get job pid.
+     *
+     * @return int
+     */
+    public function getPid();
+
+    /**
      * Set started at.
      *
      * @param \DateTime $startedAt

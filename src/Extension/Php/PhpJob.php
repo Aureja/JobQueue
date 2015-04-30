@@ -13,7 +13,9 @@ namespace Aureja\JobQueue\Extension\Php;
 
 use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
+use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\PhpProcess;
@@ -26,28 +28,29 @@ use Symfony\Component\Process\PhpProcess;
 class PhpJob implements JobInterface
 {
 
+    use JobTrait;
+
     /**
      * @var PhpProcess
      */
     private $process;
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
      * Constructor.
      *
      * @param string $script
+     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct($script)
+    public function __construct($script, JobReportManagerInterface $reportManager)
     {
         $this->process = new PhpProcess($script);
         $this->process->setTimeout(null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPid()
-    {
-        return $this->process->getPid();
+        $this->reportManager = $reportManager;
     }
 
     /**
@@ -56,12 +59,18 @@ class PhpJob implements JobInterface
     public function run(JobReportInterface $report)
     {
         try {
-            $this->process->run();
-            if (null === $this->process->getErrorOutput()) {
+            $this->process->start();
+            $this->savePid($this->process->getPid(), $report);
+            while ($this->process->isRunning()) {
+                // waiting for process to finish
+            }
+
+            if ($this->process->isSuccessful()) {
                 $report->setOutput(trim($this->process->getOutput()));
 
                 return JobState::STATE_FINISHED;
             }
+
             $report->setErrorOutput(trim($this->process->getErrorOutput()));
         } catch (LogicException $e) {
             $report->setErrorOutput($e->getMessage());

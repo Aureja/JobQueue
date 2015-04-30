@@ -11,6 +11,8 @@
 
 namespace Aureja\JobQueue\Model\Manager;
 
+use Aureja\JobQueue\Model\JobConfigurationInterface;
+
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
@@ -22,10 +24,11 @@ abstract class JobReportManager implements JobReportManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function create()
+    public function create(JobConfigurationInterface $configuration)
     {
         $className = $this->getClass();
         $report = new $className;
+        $report->setConfiguration($configuration);
 
         return $report;
     }

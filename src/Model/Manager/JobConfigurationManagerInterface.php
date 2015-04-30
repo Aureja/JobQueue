@@ -39,6 +39,15 @@ interface JobConfigurationManagerInterface
     public function findAll();
 
     /**
+     * Find job configuration by name.
+     *
+     * @param string $name
+     *
+     * @return null|JobConfigurationInterface
+     */
+    public function findByName($name);
+
+    /**
      * Find next job configuration.
      *
      * @param string $queue

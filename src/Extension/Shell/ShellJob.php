@@ -13,7 +13,9 @@ namespace Aureja\JobQueue\Extension\Shell;
 
 use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
+use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
@@ -26,28 +28,29 @@ use Symfony\Component\Process\Process;
 class ShellJob implements JobInterface
 {
 
+    use JobTrait;
+
     /**
      * @var Process
      */
     private $process;
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
      * Constructor.
      *
      * @param string $command
+     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct($command)
+    public function __construct($command, JobReportManagerInterface $reportManager)
     {
         $this->process = new Process($command);
         $this->process->setTimeout(null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPid()
-    {
-        return $this->process->getPid();
+        $this->reportManager = $reportManager;
     }
 
     /**
@@ -56,12 +59,18 @@ class ShellJob implements JobInterface
     public function run(JobReportInterface $report)
     {
         try {
-            $this->process->run();
-            if (null === $this->process->getErrorOutput()) {
+            $this->process->start();
+            $this->savePid($this->process->getPid(), $report);
+            while ($this->process->isRunning()) {
+                // waiting for process to finish
+            }
+
+            if ($this->process->isSuccessful()) {
                 $report->setOutput(trim($this->process->getOutput()));
 
                 return JobState::STATE_FINISHED;
             }
+
             $report->setErrorOutput(trim($this->process->getErrorOutput()));
         } catch (LogicException $e) {
             $report->setErrorOutput($e->getMessage());

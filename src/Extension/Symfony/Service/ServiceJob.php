@@ -14,7 +14,9 @@ namespace Aureja\JobQueue\Extension\Symfony\Service;
 use Aureja\JobQueue\Extension\Symfony\Exception\NotFoundServiceJobException;
 use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
+use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,6 +26,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ServiceJob implements JobInterface
 {
+
+    use JobTrait;
 
     /**
      * @var ContainerInterface
@@ -41,25 +45,24 @@ class ServiceJob implements JobInterface
     private $method;
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
      * Constructor.
      *
      * @param ContainerInterface $container
      * @param string $id
      * @param string $method
+     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(ContainerInterface $container, $id, $method)
+    public function __construct(ContainerInterface $container, $id, $method, JobReportManagerInterface $reportManager)
     {
         $this->id = $id;
         $this->method = $method;
         $this->container = $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPid()
-    {
-        return null;
+        $this->reportManager = $reportManager;
     }
 
     /**
@@ -78,6 +81,8 @@ class ServiceJob implements JobInterface
         }
 
         try {
+            $this->savePid(posix_getpid(), $report);
+
             $report->setOutput($service->{$this->method}());
 
             return JobState::STATE_FINISHED;

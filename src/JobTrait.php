@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Aureja package.
+ * This file is part of the Tadcka package.
  *
  * (c) Tadas Gliaubicas <tadcka89@gmail.com>
  *
@@ -16,17 +16,19 @@ use Aureja\JobQueue\Model\JobReportInterface;
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
- * @since 4/16/15 1:14 AM
+ * @since 4/30/15 9:38 PM
  */
-interface JobInterface
+trait JobTrait
 {
 
     /**
-     * Run job.
+     * Save job pid.
      *
+     * @param int $pid
      * @param JobReportInterface $report
-     *
-     * @return string Return job status.
      */
-    public function run(JobReportInterface $report);
+    public function savePid($pid, JobReportInterface $report)
+    {
+        $this->reportManager->add($report->setPid($pid), true);
+    }
 }

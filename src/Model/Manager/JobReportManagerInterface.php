@@ -11,6 +11,7 @@
 
 namespace Aureja\JobQueue\Model\Manager;
 
+use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\JobReportInterface;
 
 /**
@@ -24,9 +25,11 @@ interface JobReportManagerInterface
     /**
      * Create new job report object.
      *
+     * @param JobConfigurationInterface $configuration
+     *
      * @return JobReportInterface
      */
-    public function create();
+    public function create(JobConfigurationInterface $configuration);
 
     /**
      * Add job report object to persistent layer.

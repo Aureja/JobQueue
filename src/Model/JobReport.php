@@ -40,6 +40,11 @@ class JobReport implements JobReportInterface
     protected $output;
 
     /**
+     * @var int
+     */
+    protected $pid;
+
+    /**
      * @var \DateTime
      */
     protected $startedAt;
@@ -128,6 +133,24 @@ class JobReport implements JobReportInterface
     public function getOutput()
     {
         return $this->output;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPid($pid)
+    {
+        $this->pid = $pid;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPid()
+    {
+        return $this->pid;
     }
 
     /**

@@ -70,13 +70,11 @@ class JobQueue
         }
 
         try {
-            $factory = $this->jobProvider->getFactory($configuration);
+            $job = $this->jobProvider->getFactory($configuration)->create($configuration);
 
             $this->saveJobState($configuration, JobState::STATE_RUNNING);
 
-            $job = $factory->create($configuration);
-            $report = $this->reportManager->create();
-
+            $report = $this->reportManager->create($configuration);
             $state = $job->run($report);
 
             if ($state === JobState::STATE_FINISHED) {
@@ -85,8 +83,6 @@ class JobQueue
             }
 
             $configuration->addReport($report);
-
-            $report->setConfiguration($configuration);
             $report->setEndedAt(new \DateTime());
 
             $this->saveJobState($configuration, $state);

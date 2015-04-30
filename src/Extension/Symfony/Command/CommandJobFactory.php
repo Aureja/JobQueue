@@ -14,6 +14,7 @@ namespace Aureja\JobQueue\Extension\Symfony\Command;
 use Aureja\JobQueue\Extension\Shell\ShellJob;
 use Aureja\JobQueue\JobFactoryInterface;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 
 /**
  * @since 4/17/15 12:24 AM
@@ -27,13 +28,20 @@ class CommandJobFactory implements JobFactoryInterface
     private $commandBuilder;
 
     /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+
+    /**
      * Constructor.
      *
      * @param CommandBuilder $commandBuilder
+     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(CommandBuilder $commandBuilder)
+    public function __construct(CommandBuilder $commandBuilder, JobReportManagerInterface $reportManager)
     {
         $this->commandBuilder = $commandBuilder;
+        $this->reportManager = $reportManager;
     }
 
     /**
@@ -41,6 +49,8 @@ class CommandJobFactory implements JobFactoryInterface
      */
     public function create(JobConfigurationInterface $configuration)
     {
-        return new ShellJob($this->commandBuilder->build($configuration->getParameter('symfony_command')));
+        $command = $this->commandBuilder->build($configuration->getParameter('symfony_command'));
+
+        return new ShellJob($command, $this->reportManager);
     }
 }
