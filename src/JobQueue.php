@@ -14,7 +14,6 @@ namespace Aureja\JobQueue;
 use Aureja\JobQueue\Exception\JobConfigurationException;
 use Aureja\JobQueue\Exception\JobFactoryException;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
-use Aureja\JobQueue\Model\JobReportInterface;
 use Aureja\JobQueue\Model\Manager\JobConfigurationManagerInterface;
 use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Aureja\JobQueue\Provider\JobProviderInterface;
@@ -43,20 +42,28 @@ class JobQueue
     private $reportManager;
 
     /**
+     * @var JobRestoreManager
+     */
+    private $restoreManager;
+
+    /**
      * Constructor.
      *
      * @param JobConfigurationManagerInterface $configurationManager
      * @param JobProviderInterface $jobProvider
      * @param JobReportManagerInterface $reportManager
+     * @param JobRestoreManager $restoreManager
      */
     public function __construct(
         JobConfigurationManagerInterface $configurationManager,
         JobProviderInterface $jobProvider,
-        JobReportManagerInterface $reportManager
+        JobReportManagerInterface $reportManager,
+        JobRestoreManager $restoreManager
     ) {
         $this->configurationManager = $configurationManager;
         $this->jobProvider = $jobProvider;
         $this->reportManager = $reportManager;
+        $this->restoreManager = $restoreManager;
     }
 
     /**
@@ -71,7 +78,9 @@ class JobQueue
             return;
         }
 
-        $running = $this->configurationManager->findByQueueAndState($configuration->getQueue(), JobState::STATE_RUNNING);
+        $running = $this->configurationManager
+            ->findByQueueAndState($configuration->getQueue(), JobState::STATE_RUNNING);
+
         if (null !== $running) {
             return;
         }
@@ -99,6 +108,13 @@ class JobQueue
         }
     }
 
+    /**
+     * Reset job.
+     *
+     * @param string $queue
+     *
+     * @throws JobConfigurationException
+     */
     public function reset($queue)
     {
         if (!function_exists('posix_getsid')) {
@@ -106,10 +122,7 @@ class JobQueue
         }
 
         foreach ($this->configurationManager->findPotentialDeadJobs($queue) as $configuration) {
-            if ($this->isDead($configuration)) {
-                $configuration->setState(JobState::STATE_RESTORED);
-                $configuration->addReport($this->createRestoredJobReport($configuration));
-
+            if ($this->restoreManager->reset($configuration)) {
                 $this->configurationManager->save();
 
                 break;
@@ -127,43 +140,5 @@ class JobQueue
     {
         $configuration->setState($state);
         $this->configurationManager->add($configuration, true);
-    }
-
-    /**
-     * Checks or job is dead.
-     *
-     * @param JobConfigurationInterface $configuration
-     *
-     * @return bool
-     */
-    public function isDead(JobConfigurationInterface $configuration)
-    {
-        $report = $configuration->getLastReport();
-
-        if ($report && $report->getPid() && !posix_getsid($report->getPid())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Create restored job report.
-     *
-     * @param JobConfigurationInterface $configuration
-     *
-     * @return JobReportInterface
-     */
-    private function createRestoredJobReport(JobConfigurationInterface $configuration)
-    {
-        $report = $this->reportManager->create($configuration);
-        $report->setEndedAt(new \DateTime());
-        $report->setOutput('Job was dead and restored.');
-        $report->setPid(posix_getpid());
-        $report->setSuccessful(true);
-
-        $this->reportManager->add($report);
-
-        return $report;
     }
 }
