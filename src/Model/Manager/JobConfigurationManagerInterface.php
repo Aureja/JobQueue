@@ -57,6 +57,15 @@ interface JobConfigurationManagerInterface
     public function findByQueueAndState($queue, $state);
 
     /**
+     * Find potential dead job configurations.
+     *
+     * @param string $queue
+     *
+     * @return array|JobConfigurationInterface[]
+     */
+    public function findPotentialDeadJobs($queue);
+
+    /**
      * Find next job configuration.
      *
      * @param string $queue

@@ -304,6 +304,14 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
+    public function getLastReport()
+    {
+        return end($this->reports);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function addReport(JobReportInterface $report)
     {
         $this->reports[] = $report;

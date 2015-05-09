@@ -42,4 +42,9 @@ class JobState
      * State if job exits with a non-successful exit code.
      */
     const STATE_FAILED = 'failed';
+
+    /**
+     * State if job was dead and restored.
+     */
+    const STATE_RESTORED = 'restored';
 }

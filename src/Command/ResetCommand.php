@@ -11,6 +11,7 @@
 
 namespace Aureja\JobQueue\Command;
 
+use Aureja\JobQueue\JobQueue;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,6 +26,23 @@ class ResetCommand extends Command
 {
 
     /**
+     * @var JobQueue
+     */
+    private $jobQueue;
+
+    /**
+     * Constructor.
+     *
+     * @param JobQueue $jobQueue
+     */
+    public function __construct(JobQueue $jobQueue)
+    {
+        $this->jobQueue = $jobQueue;
+
+        parent::__construct();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -35,11 +53,12 @@ class ResetCommand extends Command
             ->addArgument('queue', InputArgument::OPTIONAL, 'Reset job from current queue.')
         ;
     }
+
     /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $queue = $input->getArgument('queue');
+        $this->jobQueue->reset($input->getArgument('queue'));
     }
 }

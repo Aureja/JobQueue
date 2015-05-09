@@ -202,6 +202,13 @@ interface JobConfigurationInterface
     public function getReports();
 
     /**
+     * Get last job report.
+     *
+     * @return null|JobReportInterface
+     */
+    public function getLastReport();
+
+    /**
      * Add job report.
      *
      * @param JobReportInterface $report
