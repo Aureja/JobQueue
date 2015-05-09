@@ -154,20 +154,20 @@ interface JobConfigurationInterface
     public function getPeriod();
 
     /**
-     * Set priority.
+     * Set order nr.
      *
-     * @param int $priority
+     * @param int $orderNr
      *
      * @return JobConfigurationInterface
      */
-    public function setPriority($priority);
+    public function setOrderNr($orderNr);
 
     /**
-     * Get priority.
+     * Get order nr.
      *
      * @return int
      */
-    public function getPriority();
+    public function getOrderNr();
 
     /**
      * Set queue.

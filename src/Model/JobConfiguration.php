@@ -65,7 +65,7 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * @var int
      */
-    protected $priority;
+    protected $orderNr;
 
     /**
      * @var string
@@ -88,8 +88,8 @@ class JobConfiguration implements JobConfigurationInterface
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->orderNr = 0;
         $this->parameters = [];
-        $this->priority = 0;
         $this->state = JobState::STATE_NEW;
     }
 
@@ -250,9 +250,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setPriority($priority)
+    public function setOrderNr($orderNr)
     {
-        $this->priority = $priority;
+        $this->orderNr = $orderNr;
 
         return $this;
     }
@@ -260,9 +260,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getPriority()
+    public function getOrderNr()
     {
-        return $this->priority;
+        return $this->orderNr;
     }
 
     /**

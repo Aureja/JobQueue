@@ -64,13 +64,19 @@ class JobQueue
      */
     public function run($queue)
     {
-        $configuration = $this->jobProvider->getNextConfiguration($queue);
+        $configuration = $this->configurationManager->findNext($queue);
         if (null === $configuration) {
+            return;
+        }
+
+        $running = $this->configurationManager->findByQueueAndState($configuration->getQueue(), JobState::STATE_RUNNING);
+        if (null !== $running) {
             return;
         }
 
         try {
             $job = $this->jobProvider->getFactory($configuration)->create($configuration);
+            $configuration->setOrderNr($configuration->getOrderNr() + 1);
 
             $this->saveJobState($configuration, JobState::STATE_RUNNING);
 

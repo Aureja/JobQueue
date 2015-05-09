@@ -37,13 +37,4 @@ interface JobProviderInterface
      * @return array
      */
     public function getFactoryNames();
-
-    /**
-     * Get next job configuration.
-     *
-     * @param string $queue
-     *
-     * @return null|JobConfigurationInterface
-     */
-    public function getNextConfiguration($queue);
 }
