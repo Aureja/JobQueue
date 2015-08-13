@@ -47,23 +47,39 @@ class JobQueue
     private $restoreManager;
 
     /**
+     * @var array
+     */
+    private $queues;
+
+    /**
+     * @var int
+     */
+    private $resetTimeout;
+
+    /**
      * Constructor.
      *
      * @param JobConfigurationManagerInterface $configurationManager
      * @param JobProviderInterface $jobProvider
      * @param JobReportManagerInterface $reportManager
      * @param JobRestoreManager $restoreManager
+     * @param array $queues
+     * @param int $resetTimeout
      */
     public function __construct(
         JobConfigurationManagerInterface $configurationManager,
         JobProviderInterface $jobProvider,
         JobReportManagerInterface $reportManager,
-        JobRestoreManager $restoreManager
+        JobRestoreManager $restoreManager,
+        array $queues,
+        $resetTimeout
     ) {
         $this->configurationManager = $configurationManager;
         $this->jobProvider = $jobProvider;
         $this->reportManager = $reportManager;
         $this->restoreManager = $restoreManager;
+        $this->queues = $queues;
+        $this->resetTimeout = $resetTimeout;
     }
 
     /**
@@ -73,15 +89,8 @@ class JobQueue
      */
     public function run($queue)
     {
-        $configuration = $this->configurationManager->findNext($queue);
+        $configuration = $this->getConfiguration($queue);
         if (null === $configuration) {
-            return;
-        }
-
-        $running = $this->configurationManager
-            ->findByQueueAndState($configuration->getQueue(), JobState::STATE_RUNNING);
-
-        if (null !== $running) {
             return;
         }
 
@@ -121,13 +130,69 @@ class JobQueue
             throw new JobConfigurationException('Function posix_getsid don\'t exists');
         }
 
-        foreach ($this->configurationManager->findPotentialDeadJobs($queue) as $configuration) {
+        $configurations = $this->configurationManager->findPotentialDeadJobs($this->getNextStartWithTimeout(), $queue);
+
+        foreach ($configurations as $configuration) {
             if ($this->restoreManager->reset($configuration)) {
                 $this->configurationManager->save();
 
                 break;
             }
         }
+    }
+
+    /**
+     * @param null|string $queue
+     *
+     * @return null|JobConfigurationInterface
+     */
+    private function getConfiguration($queue = null)
+    {
+        if (null === $queue) {
+            foreach ($this->queues as $queue) {
+                $configuration = $this->getConfigurationByQueue($queue);
+                if (null !== $configuration) {
+                    return $configuration;
+                }
+            }
+
+            return null;
+        }
+
+        return $this->getConfigurationByQueue($queue);
+    }
+
+    /**
+     * @param string $queue
+     *
+     * @return JobConfigurationInterface|null
+     */
+    private function getConfigurationByQueue($queue)
+    {
+        $configuration = $this->configurationManager->findNextByQueue($queue);
+        if (null === $configuration) {
+            return null;
+        }
+
+        if (false === $this->canRunQueueJob($queue)) {
+            $this->reset($queue);
+
+            return null;
+        }
+
+        return $configuration;
+    }
+
+    /**
+     * @param string $queue
+     *
+     * @return bool
+     */
+    private function canRunQueueJob($queue)
+    {
+        $running = $this->configurationManager->findByQueueAndState($queue, JobState::STATE_RUNNING);
+
+        return null === $running;
     }
 
     /**
@@ -140,5 +205,16 @@ class JobQueue
     {
         $configuration->setState($state);
         $this->configurationManager->add($configuration, true);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    private function getNextStartWithTimeout()
+    {
+        $now = new \DateTime();
+        $now->modify(sprintf('- %d seconds', $this->resetTimeout));
+
+        return $now;
     }
 }
