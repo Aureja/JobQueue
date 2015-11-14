@@ -91,6 +91,7 @@ class JobConfiguration implements JobConfigurationInterface
         $this->orderNr = 0;
         $this->parameters = [];
         $this->state = JobState::STATE_NEW;
+        $this->enabled = false;
     }
 
     /**
