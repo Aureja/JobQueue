@@ -23,6 +23,26 @@ interface JobReportManagerInterface
 {
 
     /**
+     * Get job configuration reports count.
+     *
+     * @param JobConfigurationInterface $configuration
+     *
+     * @return int
+     */
+    public function getCountByConfiguration(JobConfigurationInterface $configuration);
+
+    /**
+     * Get job configuration reports.
+     *
+     * @param JobConfigurationInterface $configuration
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return array|JobReportInterface[]
+     */
+    public function getJobReportsByConfiguration(JobConfigurationInterface $configuration, $offset, $limit);
+
+    /**
      * Create new job report object.
      *
      * @param JobConfigurationInterface $configuration
