@@ -20,6 +20,13 @@ interface JobReportInterface
 {
 
     /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+
+    /**
      * Set job configuration.
      *
      * @param JobConfigurationInterface $configuration
