@@ -24,7 +24,7 @@ interface JobReportInterface
      *
      * @return int
      */
-    public function getId()l
+    public function getId();
 
     /**
      * Set job configuration.
