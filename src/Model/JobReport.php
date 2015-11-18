@@ -20,6 +20,11 @@ class JobReport implements JobReportInterface
 {
 
     /**
+     * @var int
+     */
+    protected $id;
+
+    /**
      * @var JobConfigurationInterface
      */
     protected $configuration;
@@ -61,6 +66,14 @@ class JobReport implements JobReportInterface
     {
         $this->startedAt = new \DateTime();
         $this->successful = false;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
