@@ -90,6 +90,7 @@ class JobConfiguration implements JobConfigurationInterface
         $this->createdAt = new \DateTime();
         $this->orderNr = 0;
         $this->parameters = [];
+        $this->reports = [];
         $this->state = JobState::STATE_NEW;
         $this->enabled = false;
     }
