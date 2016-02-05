@@ -85,7 +85,7 @@ class JobRestoreManager
      */
     private function isDead(JobConfigurationInterface $configuration)
     {
-        $report = $configuration->getLastReport();
+        $report = $this->reportManager->getLastStartedByConfiguration($configuration);
 
         if ($report && $report->getPid() && !posix_getsid($report->getPid())) {
             return true;
