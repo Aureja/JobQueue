@@ -43,6 +43,15 @@ interface JobReportManagerInterface
     public function getJobReportsByConfiguration(JobConfigurationInterface $configuration, $offset, $limit);
 
     /**
+     * Get ;ast started job configuration report.
+     *
+     * @param JobConfigurationInterface $configuration
+     *
+     * @return JobReportInterface|null
+     */
+    public function getLastStartedByConfiguration(JobConfigurationInterface $configuration);
+
+    /**
      * Create new job report object.
      *
      * @param JobConfigurationInterface $configuration
