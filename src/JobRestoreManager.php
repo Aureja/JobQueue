@@ -49,7 +49,7 @@ class JobRestoreManager
     {
         if ($this->isDead($configuration)) {
             $configuration->setState(JobState::STATE_RESTORED);
-            $configuration->addReport($this->createReport($configuration));
+            $report = $this->createReport($configuration);
 
             return true;
         }

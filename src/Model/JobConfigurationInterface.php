@@ -186,36 +186,6 @@ interface JobConfigurationInterface
     public function getQueue();
 
     /**
-     * Set job reports.
-     *
-     * @param array|JobReportInterface[] $reports
-     *
-     * @return JobConfigurationInterface
-     */
-    public function setReports($reports);
-
-    /**
-     * Get job reports.
-     *
-     * @return array|JobReportInterface[]
-     */
-    public function getReports();
-
-    /**
-     * Get last job report.
-     *
-     * @return null|JobReportInterface
-     */
-    public function getLastReport();
-
-    /**
-     * Add job report.
-     *
-     * @param JobReportInterface $report
-     */
-    public function addReport(JobReportInterface $report);
-
-    /**
      * Set state.
      *
      * @param string $state

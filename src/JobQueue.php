@@ -108,7 +108,6 @@ class JobQueue
                 $report->setSuccessful(true);
             }
 
-            $configuration->addReport($report);
             $report->setEndedAt(new \DateTime());
 
             $this->saveJobState($configuration, $state);
