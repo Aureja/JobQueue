@@ -73,11 +73,6 @@ class JobConfiguration implements JobConfigurationInterface
     protected $queue;
 
     /**
-     * @var array|JobReportInterface[]
-     */
-    protected $reports;
-
-    /**
      * @var string
      */
     protected $state;
@@ -90,7 +85,6 @@ class JobConfiguration implements JobConfigurationInterface
         $this->createdAt = new \DateTime();
         $this->orderNr = 0;
         $this->parameters = [];
-        $this->reports = [];
         $this->state = JobState::STATE_NEW;
         $this->enabled = false;
     }
@@ -283,40 +277,6 @@ class JobConfiguration implements JobConfigurationInterface
     public function getQueue()
     {
         return $this->queue;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setReports($reports)
-    {
-        $this->reports = $reports;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReports()
-    {
-        return $this->reports;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLastReport()
-    {
-        return end($this->reports);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function addReport(JobReportInterface $report)
-    {
-        $this->reports[] = $report;
     }
 
     /**
