@@ -87,7 +87,7 @@ class JobRestoreManager
     {
         $report = $this->reportManager->getLastStartedByConfiguration($configuration);
 
-        if ($report && $report->getPid() && !posix_getsid($report->getPid())) {
+        if ($report && $report->getPid() && (false === $report->isSuccessful()) && !posix_getsid($report->getPid())) {
             return true;
         }
 
