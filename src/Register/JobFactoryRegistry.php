@@ -61,7 +61,7 @@ class JobFactoryRegistry
             return $this->factories[$name];
         }
 
-        throw new JobFactoryException(sprintf('Not found %s job factory', $name));
+        throw JobFactoryException::create(sprintf('Not found %s job factory', $name));
     }
 
     /**

@@ -16,6 +16,6 @@ namespace Aureja\JobQueue\Exception;
  *
  * @since 4/20/15 10:12 PM
  */
-class JobFactoryException extends \RuntimeException implements ExceptionInterface
+class JobFactoryException extends AbstractException
 {
 }

@@ -11,19 +11,20 @@
 
 namespace Aureja\JobQueue\Exception;
 
+use RuntimeException;
+
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
  *
- * @since 4/21/15 12:10 AM
+ * @since 3/5/16 7:25 PM
  */
-interface ExceptionInterface
+abstract class AbstractException extends RuntimeException implements ExceptionInterface
 {
     /**
-     * Create exception.
-     *
-     * @param string $message
-     *
-     * @return static
+     * {@inheritdoc}
      */
-    public static function create($message);
+    public static function create($message)
+    {
+        return new static($message);
+    }
 }

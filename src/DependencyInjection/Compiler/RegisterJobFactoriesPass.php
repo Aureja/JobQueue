@@ -61,7 +61,7 @@ class RegisterJobFactoriesPass implements CompilerPassInterface
 
         foreach ($container->findTaggedServiceIds($this->factoryTag) as $id => $tags) {
             if (false === isset($tags[0]['alias'])) {
-                throw new JobFactoryException('Job factory %s service without tag!', $id);
+                throw JobFactoryException::create(sprintf('Job factory %s service without tag!', $id));
             }
 
             $definition->addMethodCall('add', [new Reference($id), $tags[0]['alias']]);

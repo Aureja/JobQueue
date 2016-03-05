@@ -221,7 +221,7 @@ class JobConfiguration implements JobConfigurationInterface
             return $this->parameters[$key];
         }
 
-        throw new NotFoundParameterException(sprintf('Not found %s parameter', $key));
+        throw NotFoundParameterException::create(sprintf('Not found %s parameter', $key));
     }
 
     /**
