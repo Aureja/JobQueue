@@ -50,9 +50,9 @@ class ListCommand extends Command
         $this
             ->setName('aureja:job-queue:list')
             ->setDescription('Show jobs.')
-            ->addArgument('queue', InputArgument::OPTIONAL)
-        ;
+            ->addArgument('queue', InputArgument::OPTIONAL);
     }
+
     /**
      * {@inheritdoc}
      */
@@ -67,6 +67,7 @@ class ListCommand extends Command
                 $configuration->getState(),
                 $configuration->getName(),
                 $configuration->isEnabled() ? 'Yes' : 'No',
+                $configuration->isAutoRestorable() ? 'Yes' : 'No',
                 $configuration->getPeriod() . 's',
                 $configuration->getNextStart() ? $configuration->getNextStart()->format('Y-m-d H:i:s') : null,
                 $configuration->getFactory(),
@@ -76,7 +77,19 @@ class ListCommand extends Command
 
         $table = new Table($output);
         $table
-            ->setHeaders(['Queue', 'State', 'Name', 'Enabled', 'Period', 'Next start', 'Factory', 'Parameters'])
+            ->setHeaders(
+                [
+                    'Queue',
+                    'State',
+                    'Name',
+                    'Enabled',
+                    'Auto restorable',
+                    'Period',
+                    'Next start',
+                    'Factory',
+                    'Parameters'
+                ]
+            )
             ->setRows($rows);
 
         $table->render();
