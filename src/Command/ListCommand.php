@@ -11,7 +11,9 @@
 
 namespace Aureja\JobQueue\Command;
 
+use Aureja\JobQueue\Model\Manager\JobConfigurationManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +25,22 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ListCommand extends Command
 {
+    /**
+     * @var JobConfigurationManagerInterface
+     */
+    private $configurationManager;
+
+    /**
+     * Constructor.
+     *
+     * @param JobConfigurationManagerInterface $configurationManager
+     */
+    public function __construct(JobConfigurationManagerInterface $configurationManager)
+    {
+        parent::__construct();
+
+        $this->configurationManager = $configurationManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -40,6 +58,27 @@ class ListCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $queue = $input->getArgument('queue');
+        $configurations = $this->configurationManager->getConfigurations($input->getArgument('queue'));
+        $rows = [];
+
+        foreach ($configurations as $configuration) {
+            $rows[] = [
+                $configuration->getQueue(),
+                $configuration->getState(),
+                $configuration->getName(),
+                $configuration->isEnabled() ? 'Yes' : 'No',
+                $configuration->getPeriod() . 's',
+                $configuration->getNextStart() ? $configuration->getNextStart()->format('Y-m-d H:i:s') : null,
+                $configuration->getFactory(),
+                json_encode($configuration->getParameters()),
+            ];
+        }
+
+        $table = new Table($output);
+        $table
+            ->setHeaders(['Queue', 'State', 'Name', 'Enabled', 'Period', 'Next start', 'Factory', 'Parameters'])
+            ->setRows($rows);
+
+        $table->render();
     }
 }

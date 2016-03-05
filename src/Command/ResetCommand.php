@@ -24,7 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ResetCommand extends Command
 {
-
     /**
      * @var JobQueue
      */

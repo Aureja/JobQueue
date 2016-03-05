@@ -24,7 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RunCommand extends Command
 {
-
     /**
      * @var JobQueue
      */
