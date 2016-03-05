@@ -38,6 +38,11 @@ class JobConfiguration implements JobConfigurationInterface
     protected $enabled;
 
     /**
+     * @var bool
+     */
+    protected $autoRestorable;
+
+    /**
      * @var string
      */
     protected $factory;
@@ -87,6 +92,7 @@ class JobConfiguration implements JobConfigurationInterface
         $this->parameters = [];
         $this->state = JobState::STATE_NEW;
         $this->enabled = false;
+        $this->autoRestorable = true;
     }
 
     /**
@@ -122,6 +128,25 @@ class JobConfiguration implements JobConfigurationInterface
     {
         return $this->enabled;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAutoRestorable($autoRestorable)
+    {
+        $this->autoRestorable = $autoRestorable;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAutoRestorable()
+    {
+        return $this->autoRestorable;
+    }
+
 
     /**
      * {@inheritdoc}

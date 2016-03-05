@@ -50,6 +50,22 @@ interface JobConfigurationInterface
     public function isEnabled();
 
     /**
+     * Set auto restorable.
+     *
+     * @param bool $autoRestorable
+     *
+     * @return JobConfigurationInterface
+     */
+    public function setAutoRestorable($autoRestorable);
+
+    /**
+     * Checks or is auto restorable.
+     *
+     * @return bool
+     */
+    public function isAutoRestorable();
+
+    /**
      * Set factory.
      *
      * @param string $factory
