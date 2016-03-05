@@ -28,4 +28,3 @@ abstract class AbstractException extends RuntimeException implements ExceptionIn
         return new static($message);
     }
 }
- 
