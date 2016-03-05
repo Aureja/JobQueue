@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Tadcka package.
+ * This file is part of the Aureja package.
  *
  * (c) Tadas Gliaubicas <tadcka89@gmail.com>
  *
@@ -16,6 +16,6 @@ namespace Aureja\JobQueue\Exception;
  *
  * @since 5/9/15 12:52 PM
  */
-class JobConfigurationException extends \RuntimeException implements ExceptionInterface
+class JobConfigurationException extends AbstractException
 {
 }

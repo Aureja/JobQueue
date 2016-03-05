@@ -126,7 +126,7 @@ class JobQueue
     public function reset($queue)
     {
         if (!function_exists('posix_getsid')) {
-            throw new JobConfigurationException('Function posix_getsid don\'t exists');
+            throw JobConfigurationException::create('Function posix_getsid don\'t exists');
         }
 
         $configurations = $this->configurationManager->findPotentialDeadJobs($this->getNextStartWithTimeout(), $queue);

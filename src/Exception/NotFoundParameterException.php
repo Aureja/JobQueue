@@ -16,6 +16,6 @@ namespace Aureja\JobQueue\Exception;
  *
  * @since 4/17/15 12:22 AM
  */
-class NotFoundParameterException extends \RuntimeException implements ExceptionInterface
+class NotFoundParameterException extends AbstractException
 {
 }
