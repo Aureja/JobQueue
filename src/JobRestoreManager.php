@@ -49,7 +49,8 @@ class JobRestoreManager
     {
         if ($this->isDead($configuration)) {
             $configuration->setState(JobState::STATE_RESTORED);
-            $report = $this->createReport($configuration);
+            $configuration->setNextStart(new \DateTime());
+            $this->createReport($configuration);
 
             return true;
         }

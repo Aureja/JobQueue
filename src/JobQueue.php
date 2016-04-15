@@ -121,6 +121,8 @@ class JobQueue
      *
      * @param string $queue
      *
+     * @return bool
+     *
      * @throws JobConfigurationException
      */
     public function reset($queue)
@@ -135,9 +137,11 @@ class JobQueue
             if ($this->restoreManager->reset($configuration)) {
                 $this->configurationManager->save();
 
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -168,18 +172,15 @@ class JobQueue
      */
     private function getConfigurationByQueue($queue)
     {
-        $configuration = $this->configurationManager->findNextByQueue($queue);
-        if (null === $configuration) {
+        if($this->reset($queue)) {
             return null;
         }
 
-        if (false === $this->canRunQueueJob($queue)) {
-            $this->reset($queue);
-
-            return null;
+        if ($this->canRunQueueJob($queue)) {
+            return $this->configurationManager->findNextByQueue($queue);
         }
 
-        return $configuration;
+        return null;
     }
 
     /**
