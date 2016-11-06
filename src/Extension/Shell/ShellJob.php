@@ -27,18 +27,12 @@ use Symfony\Component\Process\Process;
  */
 class ShellJob implements JobInterface
 {
-
     use JobTrait;
 
     /**
      * @var Process
      */
     private $process;
-
-    /**
-     * @var JobReportManagerInterface
-     */
-    private $reportManager;
 
     /**
      * Constructor.

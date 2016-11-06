@@ -271,9 +271,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setOrderNr($orderNr)
+    public function increaseOrderNr()
     {
-        $this->orderNr = $orderNr;
+        $this->orderNr++;
 
         return $this;
     }

@@ -170,13 +170,11 @@ interface JobConfigurationInterface
     public function getPeriod();
 
     /**
-     * Set order nr.
-     *
-     * @param int $orderNr
+     * Increase order nr.
      *
      * @return JobConfigurationInterface
      */
-    public function setOrderNr($orderNr);
+    public function increaseOrderNr();
 
     /**
      * Get order nr.

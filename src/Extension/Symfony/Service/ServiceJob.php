@@ -26,7 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ServiceJob implements JobInterface
 {
-
     use JobTrait;
 
     /**
@@ -43,11 +42,6 @@ class ServiceJob implements JobInterface
      * @var string
      */
     private $method;
-
-    /**
-     * @var JobReportManagerInterface
-     */
-    private $reportManager;
 
     /**
      * Constructor.

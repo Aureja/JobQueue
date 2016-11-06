@@ -12,6 +12,7 @@
 namespace Aureja\JobQueue;
 
 use Aureja\JobQueue\Model\JobReportInterface;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -20,7 +21,11 @@ use Aureja\JobQueue\Model\JobReportInterface;
  */
 trait JobTrait
 {
-
+    /**
+     * @var JobReportManagerInterface
+     */
+    private $reportManager;
+    
     /**
      * Save job pid.
      *

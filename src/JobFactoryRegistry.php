@@ -21,7 +21,6 @@ use Aureja\JobQueue\JobFactoryInterface;
  */
 class JobFactoryRegistry
 {
-
     /**
      * @var array|JobFactoryInterface[]
      */
@@ -55,7 +54,7 @@ class JobFactoryRegistry
      *
      * @throws JobFactoryException
      */
-    public function getFactory($name)
+    public function get($name)
     {
         if (isset($this->factories[$name])) {
             return $this->factories[$name];
@@ -69,7 +68,7 @@ class JobFactoryRegistry
      *
      * @return array|JobFactoryInterface[]
      */
-    public function getFactories()
+    public function all()
     {
         return $this->factories;
     }

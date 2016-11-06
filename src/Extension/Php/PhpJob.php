@@ -27,18 +27,12 @@ use Symfony\Component\Process\PhpProcess;
  */
 class PhpJob implements JobInterface
 {
-
     use JobTrait;
 
     /**
      * @var PhpProcess
      */
     private $process;
-
-    /**
-     * @var JobReportManagerInterface
-     */
-    private $reportManager;
 
     /**
      * Constructor.

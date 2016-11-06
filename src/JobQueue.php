@@ -16,7 +16,8 @@ use Aureja\JobQueue\Exception\JobFactoryException;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\Manager\JobConfigurationManagerInterface;
 use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
-use Aureja\JobQueue\Provider\JobProviderInterface;
+use Aureja\JobQueue\Register\JobFactoryRegistry;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -25,16 +26,20 @@ use Aureja\JobQueue\Provider\JobProviderInterface;
  */
 class JobQueue
 {
-
     /**
      * @var JobConfigurationManagerInterface
      */
     private $configurationManager;
 
     /**
-     * @var JobProviderInterface
+     * @var EventDispatcherInterface
      */
-    private $jobProvider;
+    private $eventDispatcher;
+
+    /**
+     * @var JobFactoryRegistry
+     */
+    private $factoryRegistry;
 
     /**
      * @var JobReportManagerInterface
@@ -60,7 +65,8 @@ class JobQueue
      * Constructor.
      *
      * @param JobConfigurationManagerInterface $configurationManager
-     * @param JobProviderInterface $jobProvider
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param JobFactoryRegistry $factoryRegistry
      * @param JobReportManagerInterface $reportManager
      * @param JobRestoreManager $restoreManager
      * @param array $queues
@@ -68,14 +74,16 @@ class JobQueue
      */
     public function __construct(
         JobConfigurationManagerInterface $configurationManager,
-        JobProviderInterface $jobProvider,
+        EventDispatcherInterface $eventDispatcher,
+        JobFactoryRegistry $factoryRegistry,
         JobReportManagerInterface $reportManager,
         JobRestoreManager $restoreManager,
         array $queues,
         $resetTimeout
     ) {
         $this->configurationManager = $configurationManager;
-        $this->jobProvider = $jobProvider;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->factoryRegistry = $factoryRegistry;
         $this->reportManager = $reportManager;
         $this->restoreManager = $restoreManager;
         $this->queues = $queues;
@@ -90,25 +98,26 @@ class JobQueue
     public function run($queue)
     {
         $configuration = $this->getConfiguration($queue);
+        
         if (null === $configuration) {
             return;
         }
 
         try {
-            $job = $this->jobProvider->getFactory($configuration)->create($configuration);
-            $configuration->setOrderNr($configuration->getOrderNr() + 1);
+            $job = $this->getJob($configuration);
+            $configuration->increaseOrderNr();
 
             $this->saveJobState($configuration, JobState::STATE_RUNNING);
 
             $report = $this->reportManager->create($configuration);
             $state = $job->run($report);
 
-            if ($state === JobState::STATE_FINISHED) {
+            if (JobState::STATE_FINISHED === $state) {
                 $configuration->setNextStart(new \DateTime('+' . $configuration->getPeriod() . ' seconds'));
                 $report->setSuccessful(true);
             }
 
-            $report->setEndedAt(new \DateTime());
+            $report->setEndedAt();
 
             $this->saveJobState($configuration, $state);
         } catch (JobFactoryException $e) {
@@ -154,6 +163,7 @@ class JobQueue
         if (null === $queue) {
             foreach ($this->queues as $queue) {
                 $configuration = $this->getConfigurationByQueue($queue);
+
                 if (null !== $configuration) {
                     return $configuration;
                 }
@@ -196,6 +206,16 @@ class JobQueue
     }
 
     /**
+     * @param JobConfigurationInterface $configuration
+     *
+     * @return JobInterface
+     */
+    private function getJob(JobConfigurationInterface $configuration)
+    {
+        return $this->factoryRegistry->get($configuration->getName())->create($configuration);
+    }
+
+    /**
      * Save job state.
      *
      * @param JobConfigurationInterface $configuration
@@ -205,6 +225,8 @@ class JobQueue
     {
         $configuration->setState($state);
         $this->configurationManager->add($configuration, true);
+        
+        $this->eventDispatcher->dispatch(JobQueueEvents::CHANGE_JOB_STATE, new JobEvent($configuration));
     }
 
     /**
