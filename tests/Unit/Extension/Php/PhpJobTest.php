@@ -27,7 +27,8 @@ class PhpJobTest extends TestCase
 {
     public function testRunScript_Failed()
     {
-        $job = new PhpJob('<?php echo "Hello word!"', $this->getMockReportManager());
+        $job = new PhpJob('<?php echo "Hello word!"');
+        $job->setReportManager($this->getMockReportManager());
         $report = new JobReport();
 
         $state = $job->run($report);
@@ -42,7 +43,8 @@ class PhpJobTest extends TestCase
 
     public function testRunScript_Finished()
     {
-        $job = new PhpJob('<?php echo "Hello word!";', $this->getMockReportManager());
+        $job = new PhpJob('<?php echo "Hello word!";');
+        $job->setReportManager($this->getMockReportManager());
         $report = new JobReport();
 
         $state = $job->run($report);

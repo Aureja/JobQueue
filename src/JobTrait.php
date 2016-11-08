@@ -25,7 +25,19 @@ trait JobTrait
      * @var JobReportManagerInterface
      */
     private $reportManager;
-    
+
+    /**
+     * @param JobReportManagerInterface $reportManager
+     * 
+     * @return $this
+     */
+    public function setReportManager($reportManager)
+    {
+        $this->reportManager = $reportManager;
+
+        return $this;
+    }
+
     /**
      * Save job pid.
      *
@@ -34,6 +46,7 @@ trait JobTrait
      */
     public function savePid($pid, JobReportInterface $report)
     {
-        $this->reportManager->add($report->setPid($pid), true);
+        $report->setPid($pid);
+        $this->reportManager->add($report, true);
     }
 }

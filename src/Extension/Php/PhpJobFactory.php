@@ -43,6 +43,9 @@ class PhpJobFactory implements JobFactoryInterface
      */
     public function create(JobConfigurationInterface $configuration)
     {
-        return new PhpJob($configuration->getParameter('php_script'), $this->reportManager);
+        $job = new PhpJob($configuration->getParameter('php_script'));
+        $job->setReportManager($this->reportManager);
+
+        return $job;
     }
 }

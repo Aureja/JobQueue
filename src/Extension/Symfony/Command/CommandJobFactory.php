@@ -50,7 +50,9 @@ class CommandJobFactory implements JobFactoryInterface
     public function create(JobConfigurationInterface $configuration)
     {
         $command = $this->commandBuilder->build($configuration->getParameter('symfony_command'));
-
-        return new ShellJob($command, $this->reportManager);
+        $job = new ShellJob($command);
+        $job->setReportManager($this->reportManager);
+        
+        return $job;
     }
 }

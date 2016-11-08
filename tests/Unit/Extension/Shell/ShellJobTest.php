@@ -28,7 +28,8 @@ class ShellJobTest extends TestCase
 
     public function testRunCommand_Failed()
     {
-        $job = new ShellJob('aureja_fake 1', $this->getMockReportManager());
+        $job = new ShellJob('aureja_fake 1');
+        $job->setReportManager($this->getMockReportManager());
         $report = new JobReport();
 
         $state = $job->run($report);
@@ -40,7 +41,8 @@ class ShellJobTest extends TestCase
 
     public function testRunCommand_Finished()
     {
-        $job = new ShellJob('sleep 1', $this->getMockReportManager());
+        $job = new ShellJob('sleep 1');
+        $job->setReportManager($this->getMockReportManager());
         $report = new JobReport();
 
         $state = $job->run($report);

@@ -43,6 +43,9 @@ class ShellJobFactory implements JobFactoryInterface
      */
     public function create(JobConfigurationInterface $configuration)
     {
-        return new ShellJob($configuration->getParameter('shell_command'), $this->reportManager);
+        $job = new ShellJob($configuration->getParameter('shell_command'));
+        $job->setReportManager($this->reportManager);
+        
+        return $job;
     }
 }

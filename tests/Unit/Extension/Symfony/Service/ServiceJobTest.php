@@ -13,7 +13,6 @@ namespace Aureja\JobQueue\Tests\Unit\Extension\Service;
 
 use Aureja\JobQueue\Extension\Symfony\Service\ServiceJob;
 use Aureja\JobQueue\Model\JobReport;
-use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,7 +30,7 @@ class ServiceJobTest extends TestCase
             'Not found aureja.symfony_job service createJob method'
         );
 
-        $job = new ServiceJob($this->getMockContainer(), 'aureja.symfony_job', 'createJob', $this->getMockReportManager());
+        $job = new ServiceJob($this->getMockContainer(), 'aureja.symfony_job', 'createJob');
         $report = new JobReport();
 
         $job->run($report);
@@ -43,13 +42,5 @@ class ServiceJobTest extends TestCase
     private function getMockContainer()
     {
         return $this->getMock('Symfony\\Component\\DependencyInjection\\ContainerInterface');
-    }
-
-    /**
-     * @return MockObject|JobReportManagerInterface
-     */
-    private function getMockReportManager()
-    {
-        return $this->getMock('Aureja\\JobQueue\\Model\\Manager\\JobReportManagerInterface');
     }
 }

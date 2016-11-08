@@ -16,7 +16,6 @@ use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
 use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
-use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,14 +48,12 @@ class ServiceJob implements JobInterface
      * @param ContainerInterface $container
      * @param string $id
      * @param string $method
-     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(ContainerInterface $container, $id, $method, JobReportManagerInterface $reportManager)
+    public function __construct(ContainerInterface $container, $id, $method)
     {
         $this->id = $id;
         $this->method = $method;
         $this->container = $container;
-        $this->reportManager = $reportManager;
     }
 
     /**
@@ -76,6 +73,7 @@ class ServiceJob implements JobInterface
 
         try {
             $this->savePid(posix_getpid(), $report);
+            // TODO: array, object serialize???
             $report->setOutput($service->{$this->method}());
         } catch (\Exception $e) {
             $report->setErrorOutput($e->getMessage());
