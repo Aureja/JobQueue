@@ -16,7 +16,7 @@ namespace Aureja\JobQueue;
  *
  * @since 4/16/15 12:32 AM
  */
-class JobState
+final class JobState
 {
     /**
      * State if job is inserted, but not yet ready to be started.

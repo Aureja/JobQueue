@@ -71,4 +71,14 @@ class JobFactoryRegistry
     {
         return $this->factories;
     }
+
+    /**
+     * Get register factories names.
+     *
+     * @return array
+     */
+    public function getNames()
+    {
+        return array_keys($this->factories);
+    }
 }
