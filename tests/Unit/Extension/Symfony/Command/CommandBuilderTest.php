@@ -11,6 +11,7 @@
 
 namespace Aureja\JobQueue\Tests\Unit\Extension\Symfony\Command;
 
+use Aureja\JobQueue\Extension\PhpUtils;
 use Aureja\JobQueue\Extension\Symfony\Command\CommandBuilder;
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -24,20 +25,20 @@ class CommandBuilderTest extends TestCase
 
     public function testBuild_Dev()
     {
-        $builder = new CommandBuilder('aureja/fake-dir', 'dev');
+        $builder = new CommandBuilder('aureja_bin', 'dev');
 
         $this->assertEquals(
-            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=dev --no-debug',
+            sprintf('%s aureja_bin/console aureja:command --env=dev --no-debug', PhpUtils::getPhp()),
             $builder->build('aureja:command')
         );
     }
 
     public function testBuild_Prod()
     {
-        $builder = new CommandBuilder('aureja/fake-dir/', 'prod');
+        $builder = new CommandBuilder('aureja_bin', 'prod');
 
         $this->assertEquals(
-            '/usr/bin/php5 aureja/fake-dir/console aureja:command --env=prod --no-debug',
+            sprintf('%s aureja_bin/console aureja:command --env=prod --no-debug', PhpUtils::getPhp()),
             $builder->build('aureja:command')
         );
     }
