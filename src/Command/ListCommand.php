@@ -70,7 +70,7 @@ class ListCommand extends Command
                 $configuration->isAutoRestorable() ? 'Yes' : 'No',
                 $configuration->getPeriod() . 's',
                 $configuration->getNextStart() ? $configuration->getNextStart()->format('Y-m-d H:i:s') : null,
-                $configuration->getFactory(),
+                $configuration->getFactoryName(),
                 json_encode($configuration->getParameters()),
             ];
         }
@@ -86,7 +86,7 @@ class ListCommand extends Command
                     'Auto restorable',
                     'Period',
                     'Next start',
-                    'Factory',
+                    'Factory name',
                     'Parameters'
                 ]
             )

@@ -36,9 +36,9 @@ class RunCommand extends Command
      */
     public function __construct(JobQueue $jobQueue)
     {
-        $this->jobQueue = $jobQueue;
-
         parent::__construct();
+
+        $this->jobQueue = $jobQueue;
     }
 
     /**

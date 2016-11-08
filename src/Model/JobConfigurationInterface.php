@@ -66,20 +66,20 @@ interface JobConfigurationInterface
     public function isAutoRestorable();
 
     /**
-     * Set factory.
+     * Set factoryname.
      *
-     * @param string $factory
+     * @param string $factoryName
      *
      * @return JobConfigurationInterface
      */
-    public function setFactory($factory);
+    public function setFactoryName($factoryName);
 
     /**
-     * Get factory.
+     * Get factory name.
      *
      * @return string
      */
-    public function getFactory();
+    public function getFactoryName();
 
     /**
      * Set name.

@@ -212,7 +212,7 @@ class JobQueue
      */
     private function getJob(JobConfigurationInterface $configuration)
     {
-        return $this->factoryRegistry->get($configuration->getName())->create($configuration);
+        return $this->factoryRegistry->get($configuration->getFactoryName())->create($configuration);
     }
 
     /**
