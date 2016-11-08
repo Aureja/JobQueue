@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Aureja\JobQueue\Register;
+namespace Aureja\JobQueue;
 
 use Aureja\JobQueue\Exception\JobFactoryException;
-use Aureja\JobQueue\JobFactoryInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>

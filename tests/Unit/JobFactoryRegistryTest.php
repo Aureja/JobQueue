@@ -12,7 +12,7 @@
 namespace Aureja\JobQueue\Tests\Unit\Registry;
 
 use Aureja\JobQueue\JobFactoryInterface;
-use Aureja\JobQueue\Register\JobFactoryRegistry;
+use Aureja\JobQueue\JobFactoryRegistry;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 
@@ -23,6 +23,7 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class JobFactoryRegistryTest extends TestCase
 {
+
     /**
      * @var JobFactoryRegistry
      */
@@ -46,7 +47,7 @@ class JobFactoryRegistryTest extends TestCase
 
     public function testAdd()
     {
-        $factory = $this->getMock('Aureja\\JobQueue\\JobFactoryInterface');
+        $factory = $this->getMockJobFactory();
 
         $this->registry->add($factory, 'aureja_job');
 
@@ -61,5 +62,13 @@ class JobFactoryRegistryTest extends TestCase
         );
 
         $this->registry->get('aureja_job');
+    }
+
+    /**
+     * @return MockObject|JobFactoryInterface
+     */
+    private function getMockJobFactory()
+    {
+        return $this->getMock('Aureja\\JobQueue\\JobFactoryInterface');
     }
 }

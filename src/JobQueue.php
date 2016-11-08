@@ -16,7 +16,6 @@ use Aureja\JobQueue\Exception\JobFactoryException;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\Manager\JobConfigurationManagerInterface;
 use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
-use Aureja\JobQueue\Register\JobFactoryRegistry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
