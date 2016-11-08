@@ -11,6 +11,7 @@
 
 namespace Aureja\JobQueue;
 
+use Aureja\JobQueue\Exception\JobConfigurationException;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\JobReportInterface;
 use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
@@ -54,11 +55,16 @@ class JobRestoreManager
      */
     public function reset(JobConfigurationInterface $configuration)
     {
-        if ($this->isDead($configuration)) {
-            $configuration->setState(JobState::STATE_RESTORED);
-            $configuration->setNextStart(new \DateTime());
-            $this->createReport($configuration);
+        if (!function_exists('posix_getsid')) {
+            throw JobConfigurationException::create('Function posix_getsid don\'t exists');
+        }
 
+        if ($this->isDead($configuration)) {
+            $configuration
+                ->setState(JobState::STATE_RESTORED)
+                ->setNextStart(new \DateTime());
+            $this->saveReport($configuration);
+            
             $this->eventDispatcher->dispatch(JobQueueEvents::CHANGE_JOB_STATE, new JobEvent($configuration));
 
             return true;
@@ -74,16 +80,15 @@ class JobRestoreManager
      *
      * @return JobReportInterface
      */
-    private  function createReport(JobConfigurationInterface $configuration)
+    private function saveReport(JobConfigurationInterface $configuration)
     {
         $report = $this->reportManager->create($configuration);
-        $report->setEndedAt();
-        $report->setOutput('Job was dead and restored.');
-        $report->setSuccessful(true);
+        $report
+            ->setEndedAt()
+            ->setOutput('Job was dead and restored.')
+            ->setSuccessful(true);
 
-        $this->reportManager->add($report);
-
-        return $report;
+        $this->reportManager->add($report, true);
     }
 
     /**

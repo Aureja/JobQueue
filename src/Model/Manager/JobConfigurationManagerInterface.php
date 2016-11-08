@@ -59,12 +59,11 @@ interface JobConfigurationManagerInterface
     /**
      * Find potential dead job configurations.
      *
-     * @param \DateTime $nextStart
      * @param string $queue
      *
      * @return array|JobConfigurationInterface[]
      */
-    public function findPotentialDeadJobs(\DateTime $nextStart, $queue);
+    public function findPotentialDeadJobs($queue);
 
     /**
      * Find next job configuration.

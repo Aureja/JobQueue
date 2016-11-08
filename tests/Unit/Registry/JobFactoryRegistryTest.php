@@ -23,7 +23,6 @@ use PHPUnit_Framework_TestCase as TestCase;
  */
 class JobFactoryRegistryTest extends TestCase
 {
-
     /**
      * @var JobFactoryRegistry
      */
@@ -47,11 +46,11 @@ class JobFactoryRegistryTest extends TestCase
 
     public function testAdd()
     {
-        $factory = $this->getMockJobFactory();
+        $factory = $this->getMock('Aureja\\JobQueue\\JobFactoryInterface');
 
         $this->registry->add($factory, 'aureja_job');
 
-        $this->assertEquals($factory, $this->registry->getFactory('aureja_job'));
+        $this->assertEquals($factory, $this->registry->get('aureja_job'));
     }
 
     public function testAdd_JobFactoryExceptionRaised()
@@ -61,16 +60,6 @@ class JobFactoryRegistryTest extends TestCase
             'Not found aureja_job job factory'
         );
 
-        $this->registry->getFactory('aureja_job');
-    }
-
-    /**
-     * @return MockObject|JobFactoryInterface
-     */
-    private function getMockJobFactory()
-    {
-        $mock = $this->getMock('Aureja\\JobQueue\\JobFactoryInterface');
-
-        return $mock;
+        $this->registry->get('aureja_job');
     }
 }

@@ -65,25 +65,24 @@ class ServiceJob implements JobInterface
     public function run(JobReportInterface $report)
     {
         if (false === $this->container->has($this->id)) {
-            throw new NotFoundServiceJobException(sprintf('Not found %s service', $this->id));
+            throw NotFoundServiceJobException::create(sprintf('Not found %s service', $this->id));
         }
 
         $service = $this->container->get($this->id);
 
         if (false === method_exists($service, $this->method)) {
-            throw new NotFoundServiceJobException(sprintf('Not found %s service %s method', $this->id, $this->method));
+            throw NotFoundServiceJobException::create(sprintf('Not found %s service %s method', $this->id, $this->method));
         }
 
         try {
             $this->savePid(posix_getpid(), $report);
-
             $report->setOutput($service->{$this->method}());
-
-            return JobState::STATE_FINISHED;
         } catch (\Exception $e) {
+            $report->setErrorOutput($e->getMessage());
 
+            return JobState::STATE_FAILED;
         }
 
-        return JobState::STATE_FAILED;
+        return JobState::STATE_FINISHED;
     }
 }

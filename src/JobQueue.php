@@ -57,11 +57,6 @@ class JobQueue
     private $queues;
 
     /**
-     * @var int
-     */
-    private $resetTimeout;
-
-    /**
      * Constructor.
      *
      * @param JobConfigurationManagerInterface $configurationManager
@@ -70,7 +65,6 @@ class JobQueue
      * @param JobReportManagerInterface $reportManager
      * @param JobRestoreManager $restoreManager
      * @param array $queues
-     * @param int $resetTimeout
      */
     public function __construct(
         JobConfigurationManagerInterface $configurationManager,
@@ -78,8 +72,7 @@ class JobQueue
         JobFactoryRegistry $factoryRegistry,
         JobReportManagerInterface $reportManager,
         JobRestoreManager $restoreManager,
-        array $queues,
-        $resetTimeout
+        array $queues
     ) {
         $this->configurationManager = $configurationManager;
         $this->eventDispatcher = $eventDispatcher;
@@ -87,7 +80,6 @@ class JobQueue
         $this->reportManager = $reportManager;
         $this->restoreManager = $restoreManager;
         $this->queues = $queues;
-        $this->resetTimeout = $resetTimeout;
     }
 
     /**
@@ -140,12 +132,10 @@ class JobQueue
             throw JobConfigurationException::create('Function posix_getsid don\'t exists');
         }
 
-        $configurations = $this->configurationManager->findPotentialDeadJobs($this->getNextStartWithTimeout(), $queue);
+        $configurations = $this->configurationManager->findPotentialDeadJobs($queue);
 
         foreach ($configurations as $configuration) {
             if ($this->restoreManager->reset($configuration)) {
-                $this->configurationManager->save();
-
                 return true;
             }
         }
@@ -186,11 +176,11 @@ class JobQueue
             return null;
         }
 
-        if ($this->canRunQueueJob($queue)) {
-            return $this->configurationManager->findNextByQueue($queue);
+        if ($this->hasRunningJobInQueue($queue)) {
+            return null;
         }
 
-        return null;
+        return $this->configurationManager->findNextByQueue($queue);
     }
 
     /**
@@ -198,11 +188,11 @@ class JobQueue
      *
      * @return bool
      */
-    private function canRunQueueJob($queue)
+    private function hasRunningJobInQueue($queue)
     {
         $running = $this->configurationManager->findByQueueAndState($queue, JobState::STATE_RUNNING);
 
-        return null === $running;
+        return null !== $running;
     }
 
     /**
@@ -227,16 +217,5 @@ class JobQueue
         $this->configurationManager->add($configuration, true);
         
         $this->eventDispatcher->dispatch(JobQueueEvents::CHANGE_JOB_STATE, new JobEvent($configuration));
-    }
-
-    /**
-     * @return \DateTime
-     */
-    private function getNextStartWithTimeout()
-    {
-        $now = new \DateTime();
-        $now->modify(sprintf('- %d seconds', $this->resetTimeout));
-
-        return $now;
     }
 }
