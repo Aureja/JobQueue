@@ -11,7 +11,7 @@
 
 namespace Aureja\JobQueue\Extension\Symfony\Command;
 
-use Symfony\Component\Process\PhpExecutableFinder;
+use Aureja\JobQueue\Extension\PhpUtils;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -20,7 +20,6 @@ use Symfony\Component\Process\PhpExecutableFinder;
  */
 class CommandBuilder
 {
-
     /**
      * @var string
      */
@@ -32,11 +31,6 @@ class CommandBuilder
     private $environment;
 
     /**
-     * @var string
-     */
-    private $phpExecutable;
-
-    /**
      * Constructor.
      *
      * @param string $environment
@@ -44,11 +38,8 @@ class CommandBuilder
      */
     public function __construct($consoleDir, $environment)
     {
-        $this->consoleDir = $consoleDir;
+        $this->consoleDir = rtrim($consoleDir, '/');
         $this->environment = $environment;
-
-        $finder = new PhpExecutableFinder();
-        $this->phpExecutable = $finder->find();
     }
 
     /**
@@ -62,8 +53,8 @@ class CommandBuilder
     {
         return sprintf(
             '%s %s/%s %s --env=%s --no-debug',
-            $this->phpExecutable,
-            rtrim($this->consoleDir, '/'),
+            PhpUtils::getPhp(),
+            $this->consoleDir,
             'console',
             $command,
             $this->environment

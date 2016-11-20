@@ -11,9 +11,11 @@
 
 namespace Aureja\JobQueue;
 
+use Aureja\JobQueue\Exception\JobConfigurationException;
 use Aureja\JobQueue\Model\JobConfigurationInterface;
 use Aureja\JobQueue\Model\JobReportInterface;
 use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -22,6 +24,10 @@ use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
  */
 class JobRestoreManager
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @var JobReportManagerInterface
@@ -31,10 +37,12 @@ class JobRestoreManager
     /**
      * Constructor.
      *
+     * @param EventDispatcherInterface $eventDispatcher
      * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(JobReportManagerInterface $reportManager)
+    public function __construct(EventDispatcherInterface $eventDispatcher, JobReportManagerInterface $reportManager)
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->reportManager = $reportManager;
     }
 
@@ -47,10 +55,17 @@ class JobRestoreManager
      */
     public function reset(JobConfigurationInterface $configuration)
     {
+        if (!function_exists('posix_getsid')) {
+            throw JobConfigurationException::create('Function posix_getsid don\'t exists');
+        }
+
         if ($this->isDead($configuration)) {
-            $configuration->setState(JobState::STATE_RESTORED);
-            $configuration->setNextStart(new \DateTime());
-            $this->createReport($configuration);
+            $configuration
+                ->setState(JobState::STATE_RESTORED)
+                ->setNextStart(new \DateTime());
+            $this->saveReport($configuration);
+            
+            $this->eventDispatcher->dispatch(JobQueueEvents::CHANGE_JOB_STATE, new JobEvent($configuration));
 
             return true;
         }
@@ -65,16 +80,15 @@ class JobRestoreManager
      *
      * @return JobReportInterface
      */
-    private  function createReport(JobConfigurationInterface $configuration)
+    private function saveReport(JobConfigurationInterface $configuration)
     {
         $report = $this->reportManager->create($configuration);
-        $report->setEndedAt(new \DateTime());
-        $report->setOutput('Job was dead and restored.');
-        $report->setSuccessful(true);
+        $report
+            ->setEndedAt()
+            ->setOutput('Job was dead and restored.')
+            ->setSuccessful(true);
 
-        $this->reportManager->add($report);
-
-        return $report;
+        $this->reportManager->add($report, true);
     }
 
     /**
@@ -88,10 +102,6 @@ class JobRestoreManager
     {
         $report = $this->reportManager->getLastStartedByConfiguration($configuration);
 
-        if ($report && $report->getPid() && (false === $report->isSuccessful()) && !posix_getsid($report->getPid())) {
-            return true;
-        }
-
-        return false;
+        return $report && $report->getPid() && (false === $report->isSuccessful()) && !posix_getsid($report->getPid());
     }
 }

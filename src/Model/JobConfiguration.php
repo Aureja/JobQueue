@@ -45,7 +45,7 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * @var string
      */
-    protected $factory;
+    protected $factoryName;
 
     /**
      * @var string
@@ -151,9 +151,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setFactory($factory)
+    public function setFactoryName($factoryName)
     {
-        $this->factory = $factory;
+        $this->factoryName = $factoryName;
 
         return $this;
     }
@@ -161,9 +161,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getFactory()
+    public function getFactoryName()
     {
-        return $this->factory;
+        return $this->factoryName;
     }
 
     /**
@@ -271,9 +271,9 @@ class JobConfiguration implements JobConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function setOrderNr($orderNr)
+    public function increaseOrderNr()
     {
-        $this->orderNr = $orderNr;
+        $this->orderNr++;
 
         return $this;
     }

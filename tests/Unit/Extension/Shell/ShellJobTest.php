@@ -13,7 +13,9 @@ namespace Aureja\JobQueue\Tests\Unit\Extension\Shell;
 
 use Aureja\JobQueue\Extension\Shell\ShellJob;
 use Aureja\JobQueue\JobState;
-use Aureja\JobQueue\Model\Report;
+use Aureja\JobQueue\Model\JobReport;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -27,7 +29,8 @@ class ShellJobTest extends TestCase
     public function testRunCommand_Failed()
     {
         $job = new ShellJob('aureja_fake 1');
-        $report = new Report();
+        $job->setReportManager($this->getMockReportManager());
+        $report = new JobReport();
 
         $state = $job->run($report);
 
@@ -39,11 +42,20 @@ class ShellJobTest extends TestCase
     public function testRunCommand_Finished()
     {
         $job = new ShellJob('sleep 1');
-        $report = new Report();
+        $job->setReportManager($this->getMockReportManager());
+        $report = new JobReport();
 
         $state = $job->run($report);
 
         $this->assertEquals(JobState::STATE_FINISHED, $state);
         $this->assertEmpty($report->getOutput());
+    }
+
+    /**
+     * @return MockObject|JobReportManagerInterface
+     */
+    private function getMockReportManager()
+    {
+        return $this->getMock('Aureja\\JobQueue\\Model\\Manager\\JobReportManagerInterface');
     }
 }

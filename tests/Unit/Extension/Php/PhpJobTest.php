@@ -13,7 +13,9 @@ namespace Aureja\JobQueue\Tests\Unit\Extension\Php;
 
 use Aureja\JobQueue\Extension\Php\PhpJob;
 use Aureja\JobQueue\JobState;
-use Aureja\JobQueue\Model\Report;
+use Aureja\JobQueue\Model\JobReport;
+use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 use PHPUnit_Framework_TestCase as TestCase;
 
 /**
@@ -26,7 +28,8 @@ class PhpJobTest extends TestCase
     public function testRunScript_Failed()
     {
         $job = new PhpJob('<?php echo "Hello word!"');
-        $report = new Report();
+        $job->setReportManager($this->getMockReportManager());
+        $report = new JobReport();
 
         $state = $job->run($report);
 
@@ -41,11 +44,20 @@ class PhpJobTest extends TestCase
     public function testRunScript_Finished()
     {
         $job = new PhpJob('<?php echo "Hello word!";');
-        $report = new Report();
+        $job->setReportManager($this->getMockReportManager());
+        $report = new JobReport();
 
         $state = $job->run($report);
 
         $this->assertEquals(JobState::STATE_FINISHED, $state);
         $this->assertEquals('Hello word!', $report->getOutput());
+    }
+
+    /**
+     * @return MockObject|JobReportManagerInterface
+     */
+    private function getMockReportManager()
+    {
+        return $this->getMock('Aureja\\JobQueue\\Model\\Manager\\JobReportManagerInterface');
     }
 }

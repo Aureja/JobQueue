@@ -20,7 +20,6 @@ use Aureja\JobQueue\Model\JobReportInterface;
  */
 interface JobInterface
 {
-
     /**
      * Run job.
      *

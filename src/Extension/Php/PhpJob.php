@@ -15,7 +15,6 @@ use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
 use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
-use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\Process\Exception\LogicException;
 use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\PhpProcess;
@@ -27,7 +26,6 @@ use Symfony\Component\Process\PhpProcess;
  */
 class PhpJob implements JobInterface
 {
-
     use JobTrait;
 
     /**
@@ -36,21 +34,14 @@ class PhpJob implements JobInterface
     private $process;
 
     /**
-     * @var JobReportManagerInterface
-     */
-    private $reportManager;
-
-    /**
      * Constructor.
      *
      * @param string $script
-     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct($script, JobReportManagerInterface $reportManager)
+    public function __construct($script)
     {
         $this->process = new PhpProcess($script);
         $this->process->setTimeout(null);
-        $this->reportManager = $reportManager;
     }
 
     /**

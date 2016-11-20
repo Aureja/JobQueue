@@ -16,7 +16,6 @@ use Aureja\JobQueue\JobInterface;
 use Aureja\JobQueue\JobState;
 use Aureja\JobQueue\JobTrait;
 use Aureja\JobQueue\Model\JobReportInterface;
-use Aureja\JobQueue\Model\Manager\JobReportManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,7 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ServiceJob implements JobInterface
 {
-
     use JobTrait;
 
     /**
@@ -45,24 +43,17 @@ class ServiceJob implements JobInterface
     private $method;
 
     /**
-     * @var JobReportManagerInterface
-     */
-    private $reportManager;
-
-    /**
      * Constructor.
      *
      * @param ContainerInterface $container
      * @param string $id
      * @param string $method
-     * @param JobReportManagerInterface $reportManager
      */
-    public function __construct(ContainerInterface $container, $id, $method, JobReportManagerInterface $reportManager)
+    public function __construct(ContainerInterface $container, $id, $method)
     {
         $this->id = $id;
         $this->method = $method;
         $this->container = $container;
-        $this->reportManager = $reportManager;
     }
 
     /**
@@ -71,25 +62,25 @@ class ServiceJob implements JobInterface
     public function run(JobReportInterface $report)
     {
         if (false === $this->container->has($this->id)) {
-            throw new NotFoundServiceJobException(sprintf('Not found %s service', $this->id));
+            throw NotFoundServiceJobException::create(sprintf('Not found %s service', $this->id));
         }
 
         $service = $this->container->get($this->id);
 
         if (false === method_exists($service, $this->method)) {
-            throw new NotFoundServiceJobException(sprintf('Not found %s service %s method', $this->id, $this->method));
+            throw NotFoundServiceJobException::create(sprintf('Not found %s service %s method', $this->id, $this->method));
         }
 
         try {
             $this->savePid(posix_getpid(), $report);
-
+            // TODO: array, object serialize???
             $report->setOutput($service->{$this->method}());
-
-            return JobState::STATE_FINISHED;
         } catch (\Exception $e) {
+            $report->setErrorOutput($e->getMessage());
 
+            return JobState::STATE_FAILED;
         }
 
-        return JobState::STATE_FAILED;
+        return JobState::STATE_FINISHED;
     }
 }

@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Aureja\JobQueue\Register;
+namespace Aureja\JobQueue;
 
 use Aureja\JobQueue\Exception\JobFactoryException;
-use Aureja\JobQueue\JobFactoryInterface;
 
 /**
  * @author Tadas Gliaubicas <tadcka89@gmail.com>
@@ -21,7 +20,6 @@ use Aureja\JobQueue\JobFactoryInterface;
  */
 class JobFactoryRegistry
 {
-
     /**
      * @var array|JobFactoryInterface[]
      */
@@ -55,7 +53,7 @@ class JobFactoryRegistry
      *
      * @throws JobFactoryException
      */
-    public function getFactory($name)
+    public function get($name)
     {
         if (isset($this->factories[$name])) {
             return $this->factories[$name];
@@ -69,8 +67,18 @@ class JobFactoryRegistry
      *
      * @return array|JobFactoryInterface[]
      */
-    public function getFactories()
+    public function all()
     {
         return $this->factories;
+    }
+
+    /**
+     * Get register factories names.
+     *
+     * @return array
+     */
+    public function getNames()
+    {
+        return array_keys($this->factories);
     }
 }

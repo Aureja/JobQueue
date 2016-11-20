@@ -20,5 +20,11 @@ use Aureja\JobQueue\Exception\ExceptionInterface;
  */
 class NotFoundServiceJobException extends \RuntimeException implements ExceptionInterface
 {
-
+    /**
+     * {@inheritdoc}
+     */
+    public static function create($message)
+    {
+        return new self($message);
+    }
 }

@@ -97,9 +97,9 @@ class JobReport implements JobReportInterface
     /**
      * {@inheritdoc}
      */
-    public function setEndedAt(\DateTime $endedAt)
+    public function setEndedAt()
     {
-        $this->endedAt = $endedAt;
+        $this->endedAt = new \DateTime();
 
         return $this;
     }

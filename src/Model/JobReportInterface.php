@@ -45,11 +45,9 @@ interface JobReportInterface
     /**
      * Set ended at.
      *
-     * @param \DateTime $endedAt
-     *
      * @return JobReportInterface
      */
-    public function setEndedAt(\DateTime $endedAt);
+    public function setEndedAt();
 
     /**
      * Get ended at.

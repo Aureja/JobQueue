@@ -66,20 +66,20 @@ interface JobConfigurationInterface
     public function isAutoRestorable();
 
     /**
-     * Set factory.
+     * Set factoryname.
      *
-     * @param string $factory
+     * @param string $factoryName
      *
      * @return JobConfigurationInterface
      */
-    public function setFactory($factory);
+    public function setFactoryName($factoryName);
 
     /**
-     * Get factory.
+     * Get factory name.
      *
      * @return string
      */
-    public function getFactory();
+    public function getFactoryName();
 
     /**
      * Set name.
@@ -170,13 +170,11 @@ interface JobConfigurationInterface
     public function getPeriod();
 
     /**
-     * Set order nr.
-     *
-     * @param int $orderNr
+     * Increase order nr.
      *
      * @return JobConfigurationInterface
      */
-    public function setOrderNr($orderNr);
+    public function increaseOrderNr();
 
     /**
      * Get order nr.

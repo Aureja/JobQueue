@@ -51,10 +51,13 @@ class ServiceJobFactory implements JobFactoryInterface
      */
     public function create(JobConfigurationInterface $configuration)
     {
-        return new ServiceJob(
+        $job = new ServiceJob(
             $this->container,
             $configuration->getParameter('symfony_service_id'),
             $configuration->getParameter('symfony_service_method')
         );
+        $job->setReportManager($this->reportManager);
+
+        return $this;
     }
 }
